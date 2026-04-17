@@ -16,13 +16,13 @@
 
         :root {
             --bg-color: #fffefa;
-            --base-green: #673739; 
+            --base-brown: #673739; 
             
-            --cat-orange: #9da1f8; 
-            --cat-red: #b5b8f8;    
-            --cat-purple: #cccef8; 
+            --cat-darkest: #9da1f8; 
+            --cat-darker: #b5b8f8;    
+            --cat-dark: #cccef8; 
 
-            --active-color: var(--base-green); 
+            --active-color: var(--base-brown); 
             --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
 
@@ -62,10 +62,10 @@
             padding-bottom: env(safe-area-inset-bottom);
         }
 
-        #app-container.theme-orange { --active-color: var(--cat-orange); }
-        #app-container.theme-red { --active-color: var(--cat-red); }
-        #app-container.theme-purple { --active-color: var(--cat-purple); }
-        #app-container.theme-green { --active-color: var(--base-green); }
+        #app-container.theme-darkest { --active-color: var(--cat-darkest); }
+        #app-container.theme-darker { --active-color: var(--cat-darker); }
+        #app-container.theme-dark { --active-color: var(--cat-dark); }
+        #app-container.theme-brown { --active-color: var(--base-brown); }
 
         #app-container.inverted-colors {
             background-color: var(--active-color);
@@ -130,11 +130,11 @@
         }
         .splash-content { transform: rotate(-45deg); text-align: center; width: 160%; }
         .splash-content h1 {
-            color: var(--cat-green); font-size: 2.2rem; margin: 0;
+            color: var(--cat-brown); font-size: 2.2rem; margin: 0;
             line-height: 1; text-transform: uppercase; letter-spacing: -1px;
         }
         .splash-subtitle {
-            color: var(--cat-purple); font-size: 0.9rem; font-weight: 600;
+            color: var(--cat-darkest); font-size: 0.9rem; font-weight: 600;
             font-style: italic; margin: 5px 35px 0 0; padding: 0;
             text-align: right; letter-spacing: 0.5px;
         }
@@ -217,12 +217,12 @@
             width: 90%; 
             margin: 5px 0;
         }
-        button.category-btn.btn-orange { border-color: var(--cat-orange); color: var(--cat-orange); }
-        button.category-btn.btn-orange:hover { background-color: var(--cat-orange); color: var(--bg-color); }
-        button.category-btn.btn-red { border-color: var(--cat-red); color: var(--cat-red); }
-        button.category-btn.btn-red:hover { background-color: var(--cat-red); color: var(--bg-color); }
-        button.category-btn.btn-purple { border-color: var(--cat-purple); color: var(--cat-purple); }
-        button.category-btn.btn-purple:hover { background-color: var(--cat-purple); color: var(--bg-color); }
+        button.category-btn.btn-darkest { border-color: var(--cat-darkest); color: var(--cat-darkest); }
+        button.category-btn.btn-darkest:hover { background-color: var(--cat-darkest); color: var(--bg-color); }
+        button.category-btn.btn-darker { border-color: var(--cat-darker); color: var(--cat-darker); }
+        button.category-btn.btn-darker:hover { background-color: var(--cat-darker); color: var(--bg-color); }
+        button.category-btn.btn-dark { border-color: var(--cat-dark); color: var(--cat-dark); }
+        button.category-btn.btn-dark:hover { background-color: var(--cat-dark); color: var(--bg-color); }
 
         .back-btn {
             margin-top: 10px; font-size: 0.9rem; text-decoration: underline;
@@ -235,7 +235,7 @@
 </head>
 <body>
 
-<div id="app-container" class="theme-green">
+<div id="app-container" class="theme-brown">
     
     <div id="diamond-border" class="border-decoration"></div>
 
@@ -335,19 +335,19 @@
     };
 
     const CATEGORY_THEMES = {
-        "Codzienność": "orange",
-        "Wychowanie": "red",
-        "Relacje": "purple",
-    //    "Finanse": "purple",
-    //    "Wyzwania": "purple"
-        "Everyday life": "orange",
-        "Parenting": "red",
-        "Relations": "purple",
-    //    "Finances": "purple",
-    //    "Challenges": "purple"
+        "Codzienność": "darkest",
+        "Wychowanie": "dark",
+        "Relacje": "darker", 
+        "Finanse": "darker",
+        "Everyday life": "darkest",
+        "Wyzwania": "dark",        "Everyday": "darkest",
+        "Parenting": "darker",
+        "Relations": "dark",
+        "Finances": "dark",
+        "Challenges": "dark"
     };
 
-    const COLORS_SEQ = ['var(--base-green)', 'var(--cat-orange)', 'var(--cat-red)', 'var(--cat-purple)'];
+    const COLORS_SEQ = ['var(--base-brown)', 'var(--cat-darkest)', 'var(--cat-darker)', 'var(--cat-dark)'];
 
     function showScreen(screenId) {
         if(screenId === 'screen-login' || screenId === 'screen-language') {
@@ -452,7 +452,7 @@
 
         Object.keys(cats).forEach(category => {
             const btn = document.createElement('button');
-            const colorKey = CATEGORY_THEMES[category] || 'green';
+            const colorKey = CATEGORY_THEMES[category] || 'brown';
             btn.className = `category-btn btn-${colorKey}`;
             btn.innerText = category;
             btn.onclick = () => startGame(category, colorKey);
@@ -486,9 +486,11 @@
         textEl.style.opacity = 0;
         
         setTimeout(() => {
-            textEl.innerText = question;
+            const safeText = question.text ? question.text: question;
+
+            textEl.innerText = safeText;
             
-            if (question.length > 120) {
+            if (question.text.length > 120) {
                 textEl.classList.add('long-text');
             } else {
                 textEl.classList.remove('long-text');
@@ -522,10 +524,10 @@
 
     function setAppTheme(themeClass) {
         const container = document.getElementById('app-container');
-        container.classList.remove('theme-green', 'theme-orange', 'theme-red', 'theme-purple');
+        container.classList.remove('theme-brown', 'theme-darkest', 'theme-darker', 'theme-dark');
         container.classList.add(themeClass);
     }
-    function resetThemeToDefault() { setAppTheme('theme-green'); }
+    function resetThemeToDefault() { setAppTheme('theme-brown'); }
 
     function createBorderDiamonds() {
         const container = document.getElementById('diamond-border');
@@ -557,10 +559,10 @@
         const neighborSize = 520; 
         
         const diamonds = [
-            { x: 1, y: 1, color: 'var(--cat-purple)', zIndex: 1 },    
-            { x: -1, y: 1, color: 'var(--cat-red)', zIndex: 2 },     
-            { x: -1, y: -1, color: 'var(--base-green)', zIndex: 3 }, 
-            { x: 1, y: -1, color: 'var(--cat-orange)', zIndex: 4 },  
+            { x: 1, y: 1, color: 'var(--cat-dark)', zIndex: 1 },    
+            { x: -1, y: 1, color: 'var(--cat-darker)', zIndex: 2 },     
+            { x: -1, y: -1, color: 'var(--base-brown)', zIndex: 3 }, 
+            { x: 1, y: -1, color: 'var(--cat-darkest)', zIndex: 4 },  
         ];
 
         const addDiamond = (data, customClip) => {
@@ -585,7 +587,7 @@
         addDiamond({ 
             x: 1, 
             y: 1, 
-            color: 'var(--cat-purple)', 
+            color: 'var(--cat-dark)', 
             zIndex: 5 
         }, 'polygon(0 0, 100% 0, 100% 100%)'); 
     }
