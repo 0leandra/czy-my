@@ -1,6 +1,6 @@
 :root {
     --evergreen: #002500;
-    --palm-leaf: #929982;
+    --twilight-indigo: #29335c;
     --desert-sand: #edcbb1;
     --rosewood: #b7245c;
     --wine-plum: #7c3238;
@@ -9,7 +9,7 @@
     --base-brown: var(--wine-plum);
 
     --cat-darkest: var(--evergreen);
-    --cat-darker: var(--palm-leaf);
+    --cat-darker: var(--twilight-indigo);
     --cat-dark: var(--rosewood);
 
     --active-color: var(--base-brown);
@@ -18,6 +18,23 @@
 
 * {
     box-sizing: border-box;
+}
+
+button,
+input,
+textarea,
+select {
+    -webkit-tap-highlight-color: transparent;
+}
+
+button,
+.back-btn,
+label,
+h1,
+h2,
+p {
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 body {
@@ -388,6 +405,14 @@ button {
     width: min(66.666%, 260px);
     margin: 5px 0;
     transition: transform 0.1s, background-color 0.5s ease;
+}
+
+button:disabled {
+    background-color: color-mix(in srgb, var(--active-color) 18%, var(--desert-sand));
+    color: color-mix(in srgb, var(--active-color) 40%, var(--desert-sand));
+    cursor: not-allowed;
+    opacity: 0.65;
+    transform: none;
 }
 
 button:active { transform: scale(0.95); }

@@ -62,11 +62,11 @@ const CATEGORY_THEMES = {
 };
 
 const TEXTURE_BLOBS = [
-    { x: 12, y: 18, size: 170, color: 'var(--palm-leaf)' },
+    { x: 12, y: 18, size: 170, color: 'var(--twilight-indigo)' },
     { x: 84, y: 14, size: 150, color: 'var(--rosewood)' },
     { x: 20, y: 48, size: 200, color: 'var(--wine-plum)' },
     { x: 83, y: 50, size: 190, color: 'var(--evergreen)' },
-    { x: 50, y: 82, size: 230, color: 'var(--palm-leaf)' }
+    { x: 50, y: 82, size: 230, color: 'var(--twilight-indigo)' }
 ];
 
 function isTextInputElement(el) {
@@ -142,6 +142,10 @@ function showScreen(screenId) {
 }
 
 function setLanguage(lang) {
+    if (lang === 'en') {
+        return;
+    }
+
     currentLang = lang;
     const t = TEXTS[currentLang];
 
@@ -395,11 +399,11 @@ function createSplashBackground() {
     container.innerHTML = '';
 
     const splashBlobs = [
-        { x: 8, y: 10, size: 420, color: 'var(--palm-leaf)' },
+        { x: 8, y: 10, size: 420, color: 'var(--twilight-indigo)' },
         { x: 92, y: 12, size: 380, color: 'var(--rosewood)' },
         { x: 10, y: 88, size: 400, color: 'var(--wine-plum)' },
         { x: 90, y: 85, size: 420, color: 'var(--evergreen)' },
-        { x: 50, y: 48, size: 460, color: 'var(--palm-leaf)' }
+        { x: 50, y: 48, size: 460, color: 'var(--twilight-indigo)' }
     ];
 
     splashBlobs.forEach((blob) => {
