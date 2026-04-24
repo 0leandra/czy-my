@@ -4,250 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Czy my</title>
-    <link rel="icon" type="image/png" href="https://s12.gifyu.com/images/bv25g.png">
-
-    <link rel="apple-touch-icon" href="https://s12.gifyu.com/images/bv25g.png">
+    <link rel="icon" type="image/svg+xml" href="logo.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="logo-180.png">
+    <link rel="manifest" href="manifest.webmanifest">
 
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Czy my">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#EFEBE0">
-<style>
-
-        :root {
-            --bg-color: #fffefa;
-            --base-brown: #673739; 
-            
-            --cat-darkest: #9da1f8; 
-            --cat-darker: #b5b8f8;    
-            --cat-dark: #cccef8; 
-
-            --active-color: var(--base-brown); 
-            --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        }
-
-        * {
-            box-sizing: border-box; 
-        }
-
-        body {
-            background-color: #673739; 
-            margin: 0;
-            padding: 0;
-            font-family: var(--font-main);
-            height: 100vh;
-            height: 100dvh; 
-            width: 100vw;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden; 
-        }
-
-        #app-container {
-            background-color: var(--bg-color);
-            color: var(--active-color);
-            width: 90%;
-            height: 85dvh; 
-            max-width: 400px;
-            max-height: 800px;
-            border-radius: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            transition: color 0.5s ease, background-color 0.5s ease;
-            
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-
-        #app-container.theme-darkest { --active-color: var(--cat-darkest); }
-        #app-container.theme-darker { --active-color: var(--cat-darker); }
-        #app-container.theme-dark { --active-color: var(--cat-dark); }
-        #app-container.theme-brown { --active-color: var(--base-brown); }
-
-        #app-container.inverted-colors {
-            background-color: var(--active-color);
-            color: var(--bg-color);
-        }
-        #app-container.inverted-colors h1,
-        #app-container.inverted-colors h2,
-        #app-container.inverted-colors p,
-        #app-container.inverted-colors .back-btn { color: var(--bg-color); }
-        #app-container.inverted-colors button { background-color: var(--bg-color); color: var(--active-color); }
-        #app-container.inverted-colors input { border-color: var(--bg-color); color: var(--bg-color); }
-        
-        input::placeholder { color: var(--active-color); opacity: 0.5; }
-        input::-moz-placeholder { color: var(--active-color); opacity: 0.5; }
-        #app-container.inverted-colors input::placeholder { color: var(--bg-color); opacity: 0.6; }
-        #app-container.inverted-colors input::-moz-placeholder { color: var(--bg-color); opacity: 0.6; }
-
-        .screen {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            
-            display: none;
-            flex-direction: column; 
-            justify-content: flex-start; 
-            align-items: center;
-            
-            padding: 20px; 
-            text-align: center;
-            z-index: 20;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        .screen-centered {
-            justify-content: center !important; 
-            gap: 20px; 
-        }
-
-
-        .screen.active { display: flex; opacity: 1; }
-
-        #screen-splash {
-            background-color: var(--bg-color); 
-            padding: 0;
-            justify-content: center; 
-            overflow: hidden;
-            z-index: 100;
-        }
-        #splash-bg {
-            position: absolute; width: 100%; height: 100%; top: 0; left: 0;
-            display: flex; justify-content: center; align-items: center;
-        }
-        .splash-diamond {
-            position: absolute; transform: rotate(45deg); box-shadow: 0 0 0 rgba(0,0,0,0); 
-        }
-        .splash-center-diamond {
-            position: absolute; z-index: 50; background-color: var(--bg-color); 
-            width: 260px; height: 260px; transform: rotate(45deg);
-            display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 0 40px rgba(0,0,0,0.15); top: 50%; left: 50%;
-            margin-top: -130px; margin-left: -130px;
-        }
-        .splash-content { transform: rotate(-45deg); text-align: center; width: 160%; }
-        .splash-content h1 {
-            color: var(--cat-brown); font-size: 2.2rem; margin: 0;
-            line-height: 1; text-transform: uppercase; letter-spacing: -1px;
-        }
-        .splash-subtitle {
-            color: var(--cat-darkest); font-size: 0.9rem; font-weight: 600;
-            font-style: italic; margin: 5px 35px 0 0; padding: 0;
-            text-align: right; letter-spacing: 0.5px;
-        }
-
-        .border-decoration {
-            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            pointer-events: none; z-index: 10;
-        }
-        .diamond-border-item {
-            width: 10px; height: 10px; transform: rotate(45deg); position: absolute;
-        }
-
-        
-        h1, h2 { 
-            color: var(--active-color); 
-            text-transform: uppercase; font-weight: 800; letter-spacing: 1px;
-            margin-top: 20px; margin-bottom: 20px;
-            flex-shrink: 0; 
-        }
-        
-        
-        .content-area {
-            flex-grow: 1; 
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            overflow-y: auto; 
-            min-height: 0; 
-            padding: 10px 0;
-        }
-
-        #categories-list {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            align-items: center;
-            justify-content: center;
-        }
-
-        p { 
-            font-size: 1.5rem; font-weight: 700; line-height: 1.4; margin: 0; 
-            padding: 20px;
-        }
-
-        input {
-            padding-top: 6px; padding-right: 15px; padding-bottom: 15px; padding-left: 15px; border-radius: 10px; border: 2px solid var(--active-color);
-            background: transparent; color: var(--active-color);
-            font-size: 0.8rem; text-align: center; width: 80%; outline: none; margin-bottom: 10px;
-            transition: border-color 0.5s ease, color 0.5s ease;
-        }
-
-        label {
-
-            font-size: 1em; text-align: left; margin-bottom: -15px
-        }
-
-        .footer-area {
-            flex-shrink: 0; 
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-bottom: 10px;
-        }
-
-        button {
-            background-color: var(--active-color); color: var(--bg-color);
-            border: none; padding: 15px 30px; font-size: 1.2rem; border-radius: 50px;
-            cursor: pointer; font-weight: bold; text-transform: uppercase;
-            width: 100%; margin: 5px 0;
-            transition: transform 0.1s, background-color 0.5s ease;
-        }
-        button:active { transform: scale(0.95); }
-
-        button.category-btn { 
-            background-color: transparent; border: 3px solid; 
-            width: 90%; 
-            margin: 5px 0;
-        }
-        button.category-btn.btn-darkest { border-color: var(--cat-darkest); color: var(--cat-darkest); }
-        button.category-btn.btn-darkest:hover { background-color: var(--cat-darkest); color: var(--bg-color); }
-        button.category-btn.btn-darker { border-color: var(--cat-darker); color: var(--cat-darker); }
-        button.category-btn.btn-darker:hover { background-color: var(--cat-darker); color: var(--bg-color); }
-        button.category-btn.btn-dark { border-color: var(--cat-dark); color: var(--cat-dark); }
-        button.category-btn.btn-dark:hover { background-color: var(--cat-dark); color: var(--bg-color); }
-
-        .back-btn {
-            margin-top: 10px; font-size: 0.9rem; text-decoration: underline;
-            background: none; color: var(--active-color); padding: 10px; width: auto;
-            transition: color 0.5s ease;
-        }
-
-        .long-text { font-size: 1.1rem !important; line-height: 1.3 !important; }
-    </style>
+    <meta name="theme-color" content="#edcbb1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<div id="app-container" class="theme-brown">
-    
-    <div id="diamond-border" class="border-decoration"></div>
+<div id="screen-texture" class="texture-layer"></div>
 
-    <div id="screen-splash" class="screen active">
-        <div id="splash-bg"></div>
-        <div class="splash-center-diamond">
-            <div class="splash-content">
-                <h1>Czy my</h1>
-                <p class="splash-subtitle">...chcemy mieć razem dziecko?</p>
-            </div>
-        </div>
+<div id="splash-fullscreen" aria-hidden="true">
+    <div id="splash-bg"></div>
+    <svg class="splash-wave" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M-2 62 C 15 54, 36 70, 58 62 C 74 56, 88 61, 102 58"></path>
+        <path d="M-2 67 C 18 59, 42 75, 64 67 C 80 60, 92 65, 102 63"></path>
+    </svg>
+    <div class="splash-content">
+        <h1><span class="splash-czy">Czy</span> <span class="splash-my">my</span></h1>
+        <p class="splash-subtitle">...chcemy mieć razem dziecko?</p>
     </div>
+</div>
+
+<div id="app-container" class="theme-brown splash-mode">
+    <div class="corner-frame" aria-hidden="true">
+        <span class="corner-accent corner-top-left"></span>
+        <span class="corner-accent corner-top-right"></span>
+        <span class="corner-accent corner-bottom-left"></span>
+        <span class="corner-accent corner-bottom-right"></span>
+    </div>
+
+    <div id="screen-splash" class="screen"></div>
 
     <div id="screen-language" class="screen screen-centered">
         <h2>Wybierz Język<br>Choose Language</h2>
@@ -262,7 +58,14 @@
         <label for="email">Hasło</label>
         <input type="password" id="password-input" placeholder="****">
         <button id="btn-login" onclick="checkPassword()">Start</button>
-        <div id="error-msg" style="color:red; display:none; margin-top:0px;">Błędne hasło!</div>
+        <div id="error-msg" style="color:var(--rosewood); display:none; margin-top:0px;">Błędne hasło!</div>
+    </div>
+
+  <div id="screen-mode" class="screen screen-centered">
+        <h2 id="txt-mode-header">Wybierz tryb</h2>
+        <button id="btn-mode-random" onclick="selectMode('random')">Losowo</button>
+        <button id="btn-mode-sequential" onclick="selectMode('sequential')">Po kolei</button>
+        <button class="back-btn" onclick="showScreen('screen-categories'); resetThemeToDefault();" id="btn-mode-back-cat">Zmień kategorię</button>
     </div>
 
   <div id="screen-categories" class="screen">
@@ -280,7 +83,7 @@
             <p id="question-text">Pytanie...</p>
         </div>
         <div class="footer-area">
-            <button id="btn-next" onclick="nextQuestion()">Następne</button>
+            <button id="btn-next" onclick="handleNext()">Następne</button>
             <button id="btn-change-cat" class="back-btn" onclick="showScreen('screen-categories'); resetThemeToDefault();">Zmień kategorię</button>
         </div>
     </div>
@@ -295,319 +98,7 @@
 
 </div>
 
-<script>
-    const CONFIG = { 
-        apiUrl: "https://script.google.com/macros/s/AKfycbwamKzhzlXw2bV1jH6VfYVX4r7gUX6qQzTbTFQQnEe55WyEnhrkD_Bvr7sSdiePyaUhMg/exec"
-    };
-
-    let currentLang = 'pl'; 
-    let isLoggedIn = false; 
-    let DATABASE = {};
-    let currentCategory = []; 
-
-    const TEXTS = {
-        pl: {
-            passPlaceholder: "Hasło...",
-            loginBtn: "Start",
-            loading: "Ładowanie...",
-            errorMsg: "Błędne hasło lub problem z połączeniem.",
-            loginHeader: "Zaloguj się,<br> aby rozpocząć", 
-            catHeader: "Wybierz Kategorię",
-            changeLangBtn: "Zmień język",
-            nextBtn: "Następne",
-            changeCatBtn: "Zmień kategorię",
-            finishHeader: "To już wszystkie pytania w tej kategorii!",
-            backMenuBtn: "Wróć do menu"
-        },
-        en: {
-            passPlaceholder: "Password...",
-            loginBtn: "Start",
-            loading: "Loading...",
-            errorMsg: "Incorrect password or connection issue.",
-            loginHeader: "Please log in to start",
-            catHeader: "Choose Category",
-            changeLangBtn: "Change language",
-            nextBtn: "Next",
-            changeCatBtn: "Change category",
-            finishHeader: "That's all questions in this category!",
-            backMenuBtn: "Back to menu"
-        }
-    };
-
-    const CATEGORY_THEMES = {
-        "Codzienność": "darkest",
-        "Wychowanie": "dark",
-        "Relacje": "darker", 
-        "Finanse": "darker",
-        "Everyday life": "darkest",
-        "Wyzwania": "dark",        "Everyday": "darkest",
-        "Parenting": "darker",
-        "Relations": "dark",
-        "Finances": "dark",
-        "Challenges": "dark"
-    };
-
-    const COLORS_SEQ = ['var(--base-brown)', 'var(--cat-darkest)', 'var(--cat-darker)', 'var(--cat-dark)'];
-
-    function showScreen(screenId) {
-        if(screenId === 'screen-login' || screenId === 'screen-language') {
-            resetThemeToDefault();
-            document.getElementById('app-container').classList.remove('inverted-colors');
-        }
-        
-        const activeScreens = document.querySelectorAll('.screen.active');
-        activeScreens.forEach(el => {
-            el.style.opacity = '0';
-            setTimeout(() => el.classList.remove('active'), 500);
-        });
-        
-        const target = document.getElementById(screenId);
-        if (target) {
-            target.classList.add('active');
-            setTimeout(() => target.style.opacity = '1', 50);
-        }
-    }
-
-    function setLanguage(lang) {
-        currentLang = lang; 
-        const t = TEXTS[currentLang];
-        
-        document.getElementById('password-input').placeholder = t.passPlaceholder;
-        
-        const btnLogin = document.getElementById('btn-login');
-        if (btnLogin) btnLogin.innerText = t.loginBtn;
-        
-        const loginHeader = document.getElementById('txt-login-header'); 
-        if (loginHeader) loginHeader.innerHTML = t.loginHeader;
-        
-        const errorMsg = document.getElementById('error-msg');
-        if (errorMsg) errorMsg.innerText = t.errorMsg;
-
-        const catHeader = document.getElementById('txt-cat-header');
-        if (catHeader) catHeader.innerText = t.catHeader;
-
-        const nextBtn = document.getElementById('btn-next');
-        if (nextBtn) nextBtn.innerText = t.nextBtn;
-
-        const btnChangeLang = document.getElementById('btn-change-lang');
-        if (btnChangeLang) btnChangeLang.innerText = t.changeLangBtn;
-
-        const btnChangeCat = document.getElementById('btn-change-cat');
-        if (btnChangeCat) btnChangeCat.innerText = t.changeCatBtn;
-        
-        const finishHeader = document.getElementById('txt-finish-header');
-        if (finishHeader) finishHeader.innerText = t.finishHeader;
-
-        const backMenuBtn = document.getElementById('btn-back-menu');
-        if (backMenuBtn) backMenuBtn.innerText = t.backMenuBtn;
-
-        if (isLoggedIn) {
-            initCategories(); 
-            showScreen('screen-categories');
-        } else {
-            showScreen('screen-login');
-        }
-    }
-
-    async function checkPassword() {
-        const emailVal = document.getElementById('email-input').value.trim();
-        const passwordVal = document.getElementById('password-input').value.trim();
-        const btn = document.getElementById('btn-login');
-        const errorMsg = document.getElementById('error-msg');
-        
-        if (!emailVal || !passwordVal) return;
-
-        btn.disabled = true;
-        btn.innerText = TEXTS[currentLang].loading;
-        errorMsg.style.display = 'none';
-
-        try {
-
-            const requestUrl = CONFIG.apiUrl + "?l=" + encodeURIComponent(emailVal) + "&p=" + encodeURIComponent(passwordVal);
-            const response = await fetch(requestUrl);
-            const data = await response.json();
-
-            if (data.error) throw new Error("Pass");
-
-            DATABASE = data;
-            isLoggedIn = true;
-            initCategories(); 
-            showScreen('screen-categories');
-            
-        } catch (e) {
-            console.error("Błąd:", e);
-            errorMsg.innerText = TEXTS[currentLang].errorMsg;
-            errorMsg.style.display = 'block';
-        } finally {
-            btn.disabled = false;
-            btn.innerText = TEXTS[currentLang].loginBtn;
-        }
-    }
-
-    function initCategories() {
-        const list = document.getElementById('categories-list');
-        list.innerHTML = ''; 
-        
-        const cats = DATABASE[currentLang] || {};
-
-        Object.keys(cats).forEach(category => {
-            const btn = document.createElement('button');
-            const colorKey = CATEGORY_THEMES[category] || 'brown';
-            btn.className = `category-btn btn-${colorKey}`;
-            btn.innerText = category;
-            btn.onclick = () => startGame(category, colorKey);
-            list.appendChild(btn);
-        });
-    }
-
-    function startGame(categoryName, themeColor) {
-        setAppTheme(`theme-${themeColor}`);
-        document.getElementById('app-container').classList.remove('inverted-colors');
-        
-        if (DATABASE[currentLang] && DATABASE[currentLang][categoryName]) {
-            currentCategory = [...DATABASE[currentLang][categoryName]];
-            nextQuestion();
-            showScreen('screen-game');
-        }
-    }
-
-    function nextQuestion() {
-        const textEl = document.getElementById('question-text');
-        
-        if (!currentCategory || currentCategory.length === 0) {
-            finishGame();
-            return;
-        }
-
-        const randomIndex = Math.floor(Math.random() * currentCategory.length);
-        const question = currentCategory[randomIndex];
-        currentCategory.splice(randomIndex, 1);
-        
-        textEl.style.opacity = 0;
-        
-        setTimeout(() => {
-            const safeText = question.text ? question.text: question;
-
-            textEl.innerText = safeText;
-            
-            if (question.text.length > 120) {
-                textEl.classList.add('long-text');
-            } else {
-                textEl.classList.remove('long-text');
-            }
-
-            textEl.style.opacity = 1;
-        }, 200);
-    }
-
-    function finishGame() {
-        const t = TEXTS[currentLang];
-        const finishHeader = document.getElementById('txt-finish-header');
-        if (finishHeader) finishHeader.innerText = t.finishHeader;
-        const backMenuBtn = document.getElementById('btn-back-menu');
-        if (backMenuBtn) backMenuBtn.innerText = t.backMenuBtn;
-
-        showScreen('screen-finished');
-        setTimeout(() => document.getElementById('app-container').classList.add('inverted-colors'), 100);
-    }
-
-    function resetApp() {
-        document.getElementById('app-container').classList.remove('inverted-colors');
-        resetThemeToDefault();
-        
-        if (isLoggedIn) {
-            showScreen('screen-categories');
-        } else {
-            showScreen('screen-login');
-        }
-    }
-
-    function setAppTheme(themeClass) {
-        const container = document.getElementById('app-container');
-        container.classList.remove('theme-brown', 'theme-darkest', 'theme-darker', 'theme-dark');
-        container.classList.add(themeClass);
-    }
-    function resetThemeToDefault() { setAppTheme('theme-brown'); }
-
-    function createBorderDiamonds() {
-        const container = document.getElementById('diamond-border');
-        if(!container) return;
-        container.innerHTML = '';
-        
-        let colorIndex = 0;
-        const addDiamond = (styles) => {
-            const d = document.createElement('div');
-            d.className = 'diamond-border-item';
-            d.style.backgroundColor = COLORS_SEQ[colorIndex % COLORS_SEQ.length];
-            Object.assign(d.style, styles);
-            container.appendChild(d);
-            colorIndex++;
-        };
-        const countTop = 8; const countSide = 12; const padding = 8; 
-        for (let i = 0; i < countTop; i++) addDiamond({ top: `${padding}px`, left: `${(i + 1) * (100 / (countTop + 1))}%` });
-        for (let i = 0; i < countSide; i++) addDiamond({ right: `${padding}px`, top: `${(i + 1) * (100 / (countSide + 1))}%` });
-        for (let i = 0; i < countTop; i++) addDiamond({ bottom: `${padding}px`, right: `${(i + 1) * (100 / (countTop + 1))}%` });
-        for (let i = 0; i < countSide; i++) addDiamond({ left: `${padding}px`, bottom: `${(i + 1) * (100 / (countSide + 1))}%` });
-    }
-
-    function createSplashBackground() {
-        const container = document.getElementById('splash-bg');
-        if(!container) return;
-        container.innerHTML = ''; 
-        
-        const centerSize = 260; 
-        const neighborSize = 520; 
-        
-        const diamonds = [
-            { x: 1, y: 1, color: 'var(--cat-dark)', zIndex: 1 },    
-            { x: -1, y: 1, color: 'var(--cat-darker)', zIndex: 2 },     
-            { x: -1, y: -1, color: 'var(--base-brown)', zIndex: 3 }, 
-            { x: 1, y: -1, color: 'var(--cat-darkest)', zIndex: 4 },  
-        ];
-
-        const addDiamond = (data, customClip) => {
-            const d = document.createElement('div');
-            d.className = 'splash-diamond';
-            d.style.width = `${neighborSize}px`;
-            d.style.height = `${neighborSize}px`;
-            d.style.backgroundColor = data.color;
-            d.style.zIndex = data.zIndex;
-            
-            if (customClip) {
-                d.style.clipPath = customClip;
-            }
-
-            d.style.left = `calc(50% + ${data.x * centerSize}px - ${neighborSize/2}px)`;
-            d.style.top = `calc(50% + ${data.y * centerSize}px - ${neighborSize/2}px)`;
-            container.appendChild(d);
-        }
-
-        diamonds.forEach(d => addDiamond(d));
-        
-        addDiamond({ 
-            x: 1, 
-            y: 1, 
-            color: 'var(--cat-dark)', 
-            zIndex: 5 
-        }, 'polygon(0 0, 100% 0, 100% 100%)'); 
-    }
-
-    window.onload = () => {
-        createBorderDiamonds();
-        createSplashBackground();
-
-        const passInput = document.getElementById('password-input');
-        if(passInput) {
-            passInput.addEventListener('keyup', (e) => {
-                if (e.key === "Enter") checkPassword();
-            });
-        }
-
-        setTimeout(() => {
-            showScreen('screen-language');
-        }, 3000); 
-    };
-</script>
+<script src="app.js"></script>
 
 </body>
 </html>
