@@ -1,5 +1,6 @@
 const CONFIG = {
-    apiUrl: "https://script.google.com/macros/s/AKfycbwamKzhzlXw2bV1jH6VfYVX4r7gUX6qQzTbTFQQnEe55WyEnhrkD_Bvr7sSdiePyaUhMg/exec"
+    apiUrl: "https://script.google.com/macros/s/AKfycbwamKzhzlXw2bV1jH6VfYVX4r7gUX6qQzTbTFQQnEe55WyEnhrkD_Bvr7sSdiePyaUhMg/exec",
+    supportUrl: "https://script.google.com/macros/s/AKfycbyxqAgWr4ogMa27v0AcItSVTYCLpnowNDtlCxhbpS1KkT50kecSEAoyaqORA2IKUq-nsg/exec"
 };
 
 let currentLang = 'pl';
@@ -10,6 +11,9 @@ let currentMode = 'random';
 let pendingCategoryName = '';
 let pendingThemeColor = '';
 let sequentialIndex = 0;
+let lastScreen = 'screen-categories';
+let supportParagraphsCache = null;
+let supportLoadPromise = null;
 
 const TEXTS = {
     pl: {
@@ -68,6 +72,160 @@ const TEXTURE_BLOBS = [
     { x: 83, y: 50, size: 190, color: 'var(--evergreen)' },
     { x: 50, y: 82, size: 230, color: 'var(--twilight-indigo)' }
 ];
+
+function readB2LikeText(value) {
+    if (value == null) return '';
+
+    if (typeof value === 'string') {
+        const trimmed = value.trim();
+        return trimmed.length > 0 ? trimmed : '';
+    }
+
+    if (Array.isArray(value)) {
+        // Typowy shape dla zakresu support!B2: [["tekst"]]
+        if (value.length > 0 && Array.isArray(value[0]) && typeof value[0][0] === 'string') {
+            return value[0][0].trim();
+        }
+
+        for (const item of value) {
+            const found = readB2LikeText(item);
+            if (found) return found;
+        }
+        return '';
+    }
+
+    if (typeof value === 'object') {
+        const directKeys = ['b2', 'B2', 'text', 'value', 'content', 'description'];
+        for (const key of directKeys) {
+            if (typeof value[key] === 'string' && value[key].trim()) {
+                return value[key].trim();
+            }
+        }
+    }
+
+    return '';
+}
+
+function findSupportText(value) {
+    if (value == null || typeof value !== 'object') return '';
+
+    // 1) Bezpośrednio support na root.
+    if (Object.prototype.hasOwnProperty.call(value, 'support')) {
+        const directSupport = readB2LikeText(value.support);
+        if (directSupport) return directSupport;
+    }
+
+    // 2) support pod gałęzią języka, np. data.pl.support.
+    for (const langKey of ['pl', 'en']) {
+        if (value[langKey] && typeof value[langKey] === 'object' && Object.prototype.hasOwnProperty.call(value[langKey], 'support')) {
+            const langSupport = readB2LikeText(value[langKey].support);
+            if (langSupport) return langSupport;
+        }
+    }
+
+    // 3) Odpowiedź fallback może zwrócić od razu B2-like payload.
+    const b2Like = readB2LikeText(value);
+    return b2Like;
+}
+
+function extractSupportParagraphs(value) {
+    const paragraphs = [];
+
+    function pushFromString(raw) {
+        const parts = String(raw)
+            .split(/\r?\n/)
+            .map((part) => part.trim());
+        paragraphs.push(...parts);
+    }
+
+    function visit(node) {
+        if (node == null) return;
+
+        if (typeof node === 'string' || typeof node === 'number') {
+            pushFromString(node);
+            return;
+        }
+
+        if (Array.isArray(node)) {
+            node.forEach(visit);
+            return;
+        }
+
+        if (typeof node === 'object') {
+            if (Object.prototype.hasOwnProperty.call(node, 'support')) {
+                visit(node.support);
+                return;
+            }
+
+            Object.values(node).forEach(visit);
+        }
+    }
+
+    visit(value);
+    return paragraphs;
+}
+
+async function fetchSupportParagraphs(forceRefresh = false) {
+    if (!forceRefresh && Array.isArray(supportParagraphsCache) && supportParagraphsCache.length > 0) {
+        return supportParagraphsCache;
+    }
+
+    if (!forceRefresh && supportLoadPromise) {
+        return supportLoadPromise;
+    }
+
+    supportLoadPromise = (async () => {
+        const response = await fetch(CONFIG.supportUrl);
+        const data = await response.json();
+        const paragraphs = extractSupportParagraphs(
+            data && Object.prototype.hasOwnProperty.call(data, 'support') ? data.support : data
+        );
+
+        if (!paragraphs.length) {
+            throw new Error('Brak treści.');
+        }
+
+        supportParagraphsCache = paragraphs;
+        return paragraphs;
+    })();
+
+    try {
+        return await supportLoadPromise;
+    } finally {
+        supportLoadPromise = null;
+    }
+}
+
+function renderSupportParagraphs(contentDiv, paragraphs) {
+    contentDiv.innerHTML = '';
+
+    const lastNonEmptyIndex = (() => {
+        for (let i = paragraphs.length - 1; i >= 0; i--) {
+            if (String(paragraphs[i] ?? '').trim() !== '') {
+                return i;
+            }
+        }
+        return -1;
+    })();
+
+    paragraphs.forEach((paragraphText, index) => {
+        const p = document.createElement('p');
+        p.className = 'support-paragraph';
+        if (index === lastNonEmptyIndex) {
+            p.classList.add('support-paragraph-last');
+        }
+        p.textContent = paragraphText === '' ? '\u00A0' : paragraphText;
+        contentDiv.appendChild(p);
+    });
+}
+
+function preloadSupportContent() {
+    fetchSupportParagraphs().catch(() => {
+        // Cichy fail: ekran support pokaże wtedy normalny błąd przy wejściu.
+    });
+}
+
+
 
 function isTextInputElement(el) {
     return el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA');
@@ -138,6 +296,19 @@ function showScreen(screenId) {
     if (target) {
         target.classList.add('active');
         setTimeout(() => { target.style.opacity = '1'; }, 50);
+    }
+
+    // Załaduj support tekst gdy otwiera się ekran support
+    if (screenId === 'screen-support') {
+        loadSupportContent();
+        // Ustaw przycisk Wróć aby wrócił do poprzedniego ekranu
+        const backBtn = document.getElementById('btn-back-support');
+        if (backBtn) {
+            backBtn.onclick = () => showScreen(lastScreen);
+        }
+    } else if (screenId !== 'screen-login' && screenId !== 'screen-language' && screenId !== 'screen-splash') {
+        // Zapamiętaj ten ekran jako lastScreen dla support
+        lastScreen = screenId;
     }
 }
 
@@ -215,7 +386,18 @@ async function checkPassword() {
         if (data.error) throw new Error('Pass');
 
         DATABASE = data;
+
+        if (data.support != null && String(data.support).trim()) {
+            localStorage.setItem('supportText', JSON.stringify(String(data.support).trim()));
+        }
+        localStorage.setItem('supportDebug', JSON.stringify({
+            supportKey: data.support,
+            topLevelKeys: Object.keys(data || {}),
+            timestamp: new Date().toISOString()
+        }));
+        
         isLoggedIn = true;
+        preloadSupportContent();
         initCategories();
         showScreen('screen-categories');
     } catch (e) {
@@ -417,6 +599,45 @@ function createSplashBackground() {
         el.style.background = `radial-gradient(circle, color-mix(in srgb, ${blob.color} 62%, var(--desert-sand)) 0%, color-mix(in srgb, ${blob.color} 30%, transparent) 55%, transparent 100%)`;
         container.appendChild(el);
     });
+}
+
+async function loadSupportContent() {
+    const loadingDiv = document.getElementById('support-loading');
+    const errorDiv = document.getElementById('support-error');
+    const contentDiv = document.getElementById('support-content');
+    const coffeeLink = document.querySelector('.support-coffee');
+
+    loadingDiv.style.display = 'block';
+    errorDiv.style.display = 'none';
+    contentDiv.style.display = 'none';
+    contentDiv.innerHTML = '';
+    if (coffeeLink) coffeeLink.style.display = 'none';
+
+    if (Array.isArray(supportParagraphsCache) && supportParagraphsCache.length > 0) {
+        renderSupportParagraphs(contentDiv, supportParagraphsCache);
+        contentDiv.style.display = 'block';
+        loadingDiv.style.display = 'none';
+        if (coffeeLink) coffeeLink.style.display = 'inline-block';
+        return;
+    }
+
+    try {
+        const paragraphs = await fetchSupportParagraphs();
+
+        if (paragraphs.length > 0) {
+            renderSupportParagraphs(contentDiv, paragraphs);
+            contentDiv.style.display = 'block';
+            loadingDiv.style.display = 'none';
+            if (coffeeLink) coffeeLink.style.display = 'inline-block';
+        } else {
+            throw new Error('Brak treści.');
+        }
+    } catch (e) {
+        errorDiv.textContent = 'Nie udało się załadować treści.';
+        errorDiv.style.display = 'block';
+        loadingDiv.style.display = 'none';
+        if (coffeeLink) coffeeLink.style.display = 'none';
+    }
 }
 
 window.onload = () => {

@@ -61,11 +61,19 @@
         <div id="error-msg" style="color:var(--rosewood); display:none; margin-top:0px;">Błędne hasło!</div>
     </div>
 
-  <div id="screen-mode" class="screen screen-centered">
+  <div id="screen-mode" class="screen">
         <h2 id="txt-mode-header">Wybierz tryb</h2>
-        <button id="btn-mode-random" onclick="selectMode('random')">Losowo</button>
-        <button id="btn-mode-sequential" onclick="selectMode('sequential')">Po kolei</button>
-        <button class="back-btn" onclick="showScreen('screen-categories'); resetThemeToDefault();" id="btn-mode-back-cat">Zmień kategorię</button>
+        <div class="content-area mode-actions">
+            <button id="btn-mode-random" onclick="selectMode('random')">Losowo</button>
+            <button id="btn-mode-sequential" onclick="selectMode('sequential')">Po kolei</button>
+            <button class="back-btn" onclick="showScreen('screen-categories'); resetThemeToDefault();" id="btn-mode-back-cat">Zmień kategorię</button>
+        </div>
+        <div class="footer-area support-footer">
+            <div class="support-links">
+                <a href="mailto:czymy.app@gmail.com?subject=Czy my - kontakt w sprawie aplikacji" class="support-link">Napisz do mnie</a>
+                <button onclick="showScreen('screen-support')" class="support-link">O tej aplikacji</button>
+            </div>
+        </div>
     </div>
 
   <div id="screen-categories" class="screen">
@@ -75,6 +83,10 @@
         </div>
         <div class="footer-area">
             <button id="btn-change-lang" class="back-btn" onclick="showScreen('screen-language')">Zmień język</button>
+            <div class="support-links">
+                <a href="mailto:czymy.app@gmail.com?subject=Czy my - kontakt w sprawie aplikacji" class="support-link">Napisz do mnie</a>
+                <button onclick="showScreen('screen-support')" class="support-link">O tej aplikacji</button>
+            </div>
         </div>
     </div>
 
@@ -85,6 +97,10 @@
         <div class="footer-area">
             <button id="btn-next" onclick="handleNext()">Następne</button>
             <button id="btn-change-cat" class="back-btn" onclick="showScreen('screen-categories'); resetThemeToDefault();">Zmień kategorię</button>
+            <div class="support-links">
+                <a href="mailto:czymy.app@gmail.com?subject=Czy my - kontakt w sprawie aplikacji" class="support-link">Napisz do mnie</a>
+                <button onclick="showScreen('screen-support')" class="support-link">O tej aplikacji</button>
+            </div>
         </div>
     </div>
 
@@ -94,6 +110,20 @@
             <p id="txt-finish-header">To już wszystkie pytania w tej kategorii!</p>
         </div>
         <button id="btn-back-menu" onclick="resetApp()">Wróć do menu</button>
+    </div>
+
+    <div id="screen-support" class="screen">
+        <h2>O tej aplikacji</h2>
+        <div class="content-area support-content-area">
+            <div id="support-loading" class="support-loading">Ładowanie...</div>
+            <div id="support-error" class="support-error"></div>
+            <p id="support-content" class="support-content"></p>
+            <a href="https://suppi.pl/0leandra" target="_blank" rel="noopener noreferrer" class="support-coffee" aria-label="O tej aplikacji na Suppi">☕</a>
+        </div>
+        <div class="footer-area">
+            <a href="mailto:czymy.app@gmail.com?subject=Czy my - kontakt w sprawie aplikacji" class="support-link">Napisz do mnie</a>
+            <button id="btn-back-support" class="back-btn">Wróć</button>
+        </div>
     </div>
 
 </div>
