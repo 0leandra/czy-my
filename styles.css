@@ -456,6 +456,13 @@ button.category-btn {
     margin: 5px 0;
 }
 
+#screen-categories button.category-btn {
+    width: min(58%, 220px);
+    padding: 11px 20px;
+    font-size: 0.8rem;
+    margin: 3px 0;
+}
+
 button.category-btn.btn-darkest { border-color: var(--cat-darkest); color: var(--cat-darkest); }
 button.category-btn.btn-darkest:hover { background-color: var(--cat-darkest); color: var(--bg-color); }
 button.category-btn.btn-darker { border-color: var(--cat-darker); color: var(--cat-darker); }

@@ -56,6 +56,7 @@ const CATEGORY_THEMES = {
     "Codzienność": "darkest",
     "Wychowanie": "dark",
     "Relacje": "darker",
+    "Relacje i wartości": "darker",
     "Finanse": "darker",
     "Everyday life": "darkest",
     "Wyzwania": "dark", "Everyday": "darkest",
@@ -415,12 +416,27 @@ function initCategories() {
     list.innerHTML = '';
 
     const cats = DATABASE[currentLang] || {};
+    const categoryLabels = {
+        pl: {
+            "Relacje": "Relacje i wartości"
+        }
+    };
 
-    Object.keys(cats).forEach(category => {
+    const preferredOrder = {
+        pl: ["Relacje", "Wychowanie", "Codzienność", "Finanse", "Wyzwania"],
+        en: ["Relations", "Parenting", "Everyday life", "Finances", "Challenges"]
+    };
+    const order = preferredOrder[currentLang] || [];
+    const orderedCategories = [
+        ...order.filter(category => Object.prototype.hasOwnProperty.call(cats, category)),
+        ...Object.keys(cats).filter(category => !order.includes(category))
+    ];
+
+    orderedCategories.forEach(category => {
         const btn = document.createElement('button');
         const colorKey = CATEGORY_THEMES[category] || 'brown';
         btn.className = `category-btn btn-${colorKey}`;
-        btn.innerText = category;
+        btn.innerText = (categoryLabels[currentLang] && categoryLabels[currentLang][category]) || category;
         btn.onclick = () => startGame(category, colorKey);
         list.appendChild(btn);
     });
