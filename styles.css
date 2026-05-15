@@ -498,7 +498,7 @@ button.category-btn.btn-dark:hover { background-color: var(--cat-dark); color: v
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 4px;
     font-size: 0.75rem;
     color: var(--active-color);
     text-decoration: none;
@@ -677,4 +677,13 @@ button.support-link {
 .support-coffee:hover {
     transform: scale(1.08);
     opacity: 0.9;
+}
+
+#screen-login .support-link {
+    display: inline-flex !important; /* Ensure flex is applied */
+    align-items: center; /* Align icon and text */
+    justify-content: center; /* Center content */
+    gap: 6px !important; /* Force gap specifically for login screen */
+    margin: 10px 0 !important; /* Match inline style */
+    text-align: center !important; /* Match inline style */
 }
